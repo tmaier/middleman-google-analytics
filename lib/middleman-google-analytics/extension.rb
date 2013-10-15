@@ -36,14 +36,14 @@ module Middleman
           gaq << ['_setAllowLinker', true] if options.allow_linker
           gaq << ['_gat._anonymizeIp'] if options.anonymize_ip
           gaq << ['_trackPageview']
-          %Q{<script type="text/javascript">
-  var _gaq = _gaq || [];
-  #{gaq.map! { |x| "_gaq.push(#{x});" }.join("\n  ")}
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? '//ssl' : '//www') + '.google-analytics.com/#{ga}.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+          %Q{<script>
+  var _gaq = [#{gaq.map(&:to_s).join(', ')}];
+  (function(d) {
+    var g = d.createElement('script'),
+        s = d.scripts[0];
+    g.src = '//www.google-analytics.com/#{ga}.js';
+    s.parentNode.insertBefore(g, s);
+  }(document));
 </script>}
         end
       end
